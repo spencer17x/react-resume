@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {ReactNode, useEffect, useRef, useState} from 'react';
 import './reset.css';
 import ResumeEditor from "./components/ResumeEditor";
 import StyleEditor from "./components/StyleEditor";
@@ -150,25 +150,23 @@ html{
           .map((item) => item.length)
           .reduce((p, c) => p + c, 0);
         let prefixLength = length - style.length;
-        console.log(currentStyle);
         if (currentStyle.length < length) {
           let l = currentStyle.length - prefixLength;
           let char = style.substring(l, l + 1) || ' ';
           setCurrentStyle(currentStyle + char);
-          // if (style.substring(l - 1, l) === '\n' && styleEditor) {
-          //   styleEditor.goBottom();
-          // }
-          // setTimeout(showStyle, interval);
+          if (style.substring(l - 1, l) === '\n' && styleEditor.current) {
+            // goBottom();
+          }
         } else {
           resolve();
         }
       });
-      showStyle();
+      setTimeout(showStyle, interval);
     });
   };
   useEffect(() => {
     makeResume();
-  }, []);
+  });
   return (
     <div className="App">
       <StyleEditor code={currentStyle} ref={styleEditor}/>
