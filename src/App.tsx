@@ -1,19 +1,17 @@
-import React, {ReactNode, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './reset.css';
 import ResumeEditor from "./components/ResumeEditor";
 import StyleEditor from "./components/StyleEditor";
 
 const App: React.FC = () => {
-  const styleEditor = useRef(null);
-  const resumeEditor = useRef(null);
   const [interval] = useState(40);
   const [currentStyle, setCurrentStyle] = useState('');
-  const [enableHtml] = useState(false);
+  const [enableHtml, setEnableHtml] = useState(false);
   const [fullStyle] = useState([
     `/*
 * Inspired by http://strml.net/
-* 大家好，我是方方
-* 二月了，好多公司都在招聘，你是不是也在准备简历呀。
+* 大家好，我是17
+* 好多公司都在招聘，你是不是也在准备简历呀。
 * 说做就做，我也来写一份简历！
 */
 
@@ -103,39 +101,62 @@ html{
 }
 `
   ]);
-  const [currentMarkdown] = useState('');
+  const [currentMarkdown, setCurrentMarkdown] = useState('');
   const [fullMarkdown] = useState(`方应杭
 ----
 
-资深前端工程师，资深前端讲师，现在在 [饥人谷](http://jirengu.com) 教前端课程。
+前端工程师，现于杭州一家互联网公司任职，具体哪家你就自己猜去吧
 
 技能
 ----
 
-* 前端开发
-* Rails 开发
-* Node.js 开发
-* 前端授课
+* 前端三剑客
+* React.js
+* Vue.js
+* 小程序原生开发
 
 工作经历
 ----
 
-1. [饥人谷](http://jirengu.com)
-2. 腾讯即时通讯平台部
-3. 阿里巴巴B2B部门
-4. 彩程知人项目组
+于18年毕业
+第一家公司任职3个月
+第二家公司9月初至今
 
 链接
 ----
 
-* [GitHub](https://github.com/frankfang)
-* [我的文章](https://www.zhihu.com/people/zhihusucks/pins/posts)
+* [GitHub](https://github.com/xuzpeng)
+* [我的Blog](https://xuzpeng.github.io/)
+* [我的个人开源项目](https://github.com/xuzpeng/fiona-ui)，进行中
 
-> 如果你喜欢这个效果，Fork [我的项目](https://github.com/jirengu-inc/animating-resume)，打造你自己的简历！
+> 如果你喜欢这个效果，Fork [我的项目](https://github.com/xuzpeng/react-resume)，打造你自己的简历！
 
 `);
+  const progressivelyShowResume = () => {
+    return new Promise((resolve, reject) => {
+      let length = fullMarkdown.length;
+      let showResume = () => {
+        if (currentMarkdown.length < length) {
+          setCurrentMarkdown(fullMarkdown.substring(0, currentMarkdown.length + 1))
+        } else {
+          resolve();
+        }
+      };
+      setTimeout(showResume, interval);
+    });
+  }
+  const showHtml = function () {
+    return new Promise((resolve, reject) => {
+      setEnableHtml(true);
+      resolve();
+    });
+  };
   const makeResume = async function () {
     await progressivelyShowStyle(0);
+    await progressivelyShowResume();
+    await progressivelyShowStyle(1);
+    await showHtml();
+    await progressivelyShowStyle(2);
   };
   const progressivelyShowStyle = function (n: number) {
     return new Promise((resolve, reject) => {
@@ -154,9 +175,6 @@ html{
           let l = currentStyle.length - prefixLength;
           let char = style.substring(l, l + 1) || ' ';
           setCurrentStyle(currentStyle + char);
-          if (style.substring(l - 1, l) === '\n' && styleEditor.current) {
-            // goBottom();
-          }
         } else {
           resolve();
         }
@@ -169,9 +187,8 @@ html{
   });
   return (
     <div className="App">
-      <StyleEditor code={currentStyle} ref={styleEditor}/>
-      {/*<ResumeEditor :markdown="currentMarkdown" :enableHtml="enableHtml" ref={resumeEditor}/>*/}
-      {/*<ResumeEditor ref={resumeEditor}/>*/}
+      <StyleEditor code={currentStyle}/>
+      <ResumeEditor markdown={currentMarkdown} enableHtml={enableHtml}/>
     </div>
   );
 }

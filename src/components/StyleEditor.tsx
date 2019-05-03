@@ -9,12 +9,13 @@ interface IProps {
 
 const StyleEditor: React.FC<IProps> = (props) => {
   const container = useRef(null);
-  const highlightedCode = function () {
-    return Prism.highlight(props.code, Prism.languages.css)
-  };
   const goBottom = () => {
-    // container.scrollTop = 100000
-  }
+    //@ts-ignore
+    container.current.scrollTop = 100000
+  };
+  useEffect(() => {
+    goBottom();
+  });
   return (
     <div className="styleEditor" ref={container}>
       <div className="code" dangerouslySetInnerHTML={{__html: `<style>${props.code}</style>`}}/>
