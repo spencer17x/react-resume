@@ -1,17 +1,14 @@
 import React, {useEffect, useRef} from 'react';
-//@ts-ignore
 import Prism from 'prismjs';
 
 interface IProps {
-  ref?: object;
-  code?: string;
+  code: string;
 }
 
 const StyleEditor: React.FC<IProps> = (props) => {
   const container = useRef(null);
-  const goBottom = () => {
-    //@ts-ignore
-    container.current.scrollTop = 100000
+  const goBottom: () => void = () => {
+    (container.current! as HTMLDivElement).scrollTop = 100000;
   };
   useEffect(() => {
     goBottom();
@@ -19,7 +16,7 @@ const StyleEditor: React.FC<IProps> = (props) => {
   return (
     <div className="styleEditor" ref={container}>
       <div className="code" dangerouslySetInnerHTML={{__html: `<style>${props.code}</style>`}}/>
-      <pre className="" dangerouslySetInnerHTML={{__html: Prism.highlight(props.code, Prism.languages.css)}}></pre>
+      <pre className="" dangerouslySetInnerHTML={{__html: Prism.highlight(props.code, Prism.languages.css, 'javascript')}}></pre>
     </div>
   )
 }

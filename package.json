@@ -35,5 +35,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/marked": "^0.6.5",
+    "@types/prismjs": "^1.16.0"
   }
 }

@@ -1,18 +1,15 @@
 import React, {useEffect, useRef} from 'react';
-// @ts-ignore
 import marked from 'marked';
 
 interface IProps {
-  ref?: object;
-  markdown?: string;
-  enableHtml?: boolean;
+  markdown: string;
+  enableHtml: boolean;
 }
 
 const ResumeEditor: React.FC<IProps> = (props) => {
   const container = useRef(null);
-  const goBottom = () => {
-    //@ts-ignore
-    container.current.scrollTop = 100000
+  const goBottom: () => void = () => {
+    (container.current! as HTMLDivElement).scrollTop = 100000;
   };
   useEffect(() => {
     goBottom();
