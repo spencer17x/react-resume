@@ -16,7 +16,6 @@ const ResumeEditor: React.FC<IProps> = (props) => {
   });
 
   return (
-    //@ts-ignore
     <div className={['resumeEditor', props.enableHtml ? 'htmlMode' : ''].filter(Boolean).join(' ')} ref={container}>
       {props.enableHtml ?
         <div dangerouslySetInnerHTML={{__html: props.enableHtml ? marked(props.markdown) : props.markdown}}></div> :
