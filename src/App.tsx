@@ -1,18 +1,17 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './reset.css';
-import ResumeEditor from "./components/ResumeEditor";
-import StyleEditor from "./components/StyleEditor";
+import ResumeEditor from './components/ResumeEditor';
+import StyleEditor from './components/StyleEditor';
 
 const App: React.FC = () => {
-  const [interval] = useState(40);
-  const [currentStyle, setCurrentStyle] = useState('');
-  const [enableHtml, setEnableHtml] = useState(false);
-  const [fullStyle] = useState([
-    `/*
+	const [interval] = useState(40);
+	const [currentStyle, setCurrentStyle] = useState('');
+	const [enableHtml, setEnableHtml] = useState(false);
+	const [fullStyle] = useState([
+		`/*
 * Inspired by http://strml.net/
 * 大家好，我是17
-* 好多公司都在招聘，你是不是也在准备简历呀。
-* 说做就做，我也来写一份简历！
+* 热于追求技术
 */
 
 /* 首先给所有元素加上过渡效果 */
@@ -62,14 +61,14 @@ html{
 
 
 `,
-    `
+		`
 /* 这个简历好像差点什么
  * 对了，这是 Markdown 格式的，我需要变成对 HR 更友好的格式
  * 简单，用开源工具翻译成 HTML 就行了
  */
 `
-    ,
-    `
+		,
+		`
 /* 再对 HTML 加点样式 */
 .resumeEditor{
   padding: 2em;
@@ -100,97 +99,100 @@ html{
   background: #ddd;
 }
 `
-  ]);
-  const [currentMarkdown, setCurrentMarkdown] = useState('');
-  const [fullMarkdown] = useState(`17
+	]);
+	const [currentMarkdown, setCurrentMarkdown] = useState('');
+	const [fullMarkdown] = useState(`17
 ----
 
-前端工程师，现于杭州一家互联网公司任职，具体哪家你就自己猜去吧
+前端工程师，坐标杭州
 
 技能
 ----
 
-* 前端三剑客
 * React.js
 * Vue.js
-* 小程序原生开发
+* TypeScript
+* Taro
+* 微信小程序开发
 
 工作经历
 ----
 
 于18年毕业
-第一家公司任职3个月
+第一家公司实习3个月
 第二家公司9月初至今
 
-链接
+个人简介及链接
 ----
+
+给 Taro 贡献过代码
 
 * [GitHub](https://github.com/xuzpeng)
 * [我的Blog](https://xuzpeng.github.io/)
-* [我的个人开源项目](https://github.com/xuzpeng/fiona-ui)，进行中
+* [我的个人开源项目](https://github.com/xuzpeng/fiona-ui)
 
 > 如果你喜欢这个效果，Fork [我的项目](https://github.com/xuzpeng/react-resume)，打造你自己的简历！
 
 `);
-  const progressivelyShowResume = () => {
-    return new Promise((resolve, reject) => {
-      let length = fullMarkdown.length;
-      let showResume = () => {
-        if (currentMarkdown.length < length) {
-          setCurrentMarkdown(fullMarkdown.substring(0, currentMarkdown.length + 1))
-        } else {
-          resolve();
-        }
-      };
-      setTimeout(showResume, interval);
-    });
-  }
-  const showHtml = function () {
-    return new Promise((resolve, reject) => {
-      setEnableHtml(true);
-      resolve();
-    });
-  };
-  const makeResume = async function () {
-    await progressivelyShowStyle(0);
-    await progressivelyShowResume();
-    await progressivelyShowStyle(1);
-    await showHtml();
-    await progressivelyShowStyle(2);
-  };
-  const progressivelyShowStyle = function (n: number) {
-    return new Promise((resolve, reject) => {
-      let showStyle = (async function () {
-        let style = fullStyle[n];
-        if (!style) {
-          return;
-        }
-        // 计算前 n 个 style 的字符总数
-        let length = fullStyle
-          .filter((_, index) => index <= n)
-          .map((item) => item.length)
-          .reduce((p, c) => p + c, 0);
-        let prefixLength = length - style.length;
-        if (currentStyle.length < length) {
-          let l = currentStyle.length - prefixLength;
-          let char = style.substring(l, l + 1) || ' ';
-          setCurrentStyle(currentStyle + char);
-        } else {
-          resolve();
-        }
-      });
-      setTimeout(showStyle, interval);
-    });
-  };
-  useEffect(() => {
-    makeResume();
-  });
-  return (
-    <div className="App">
-      <StyleEditor code={currentStyle}/>
-      <ResumeEditor markdown={currentMarkdown} enableHtml={enableHtml}/>
-    </div>
-  );
-}
+	const progressivelyShowResume = () => {
+		return new Promise((resolve, reject) => {
+			let length = fullMarkdown.length;
+			let showResume = () => {
+				if (currentMarkdown.length < length) {
+					setCurrentMarkdown(fullMarkdown.substring(0, currentMarkdown.length + 1));
+				} else {
+					resolve();
+				}
+			};
+			setTimeout(showResume, interval);
+		});
+	};
+	const showHtml = function () {
+		return new Promise((resolve, reject) => {
+			setEnableHtml(true);
+			resolve();
+		});
+	};
+	const makeResume = async function () {
+		await progressivelyShowStyle(0);
+		await progressivelyShowResume();
+		await progressivelyShowStyle(1);
+		await showHtml();
+		await progressivelyShowStyle(2);
+	};
+	const progressivelyShowStyle = function (n: number) {
+		return new Promise((resolve, reject) => {
+			let showStyle = (async function () {
+				let style = fullStyle[n];
+				if (!style) {
+					return;
+				}
+				// 计算前 n 个 style 的字符总数
+				let length = fullStyle
+				.filter((_, index) => index <= n)
+				.map((item) => item.length)
+				.reduce((p, c) => p + c, 0);
+				let prefixLength = length - style.length;
+				if (currentStyle.length < length) {
+					let l = currentStyle.length - prefixLength;
+					let char = style.substring(l, l + 1) || ' ';
+					setCurrentStyle(currentStyle + char);
+				} else {
+					resolve();
+				}
+			});
+			setTimeout(showStyle, interval);
+		});
+	};
+	useEffect(() => {
+		makeResume();
+	});
+	return (
+		<div className="App">
+			<StyleEditor code={currentStyle} />
+			<ResumeEditor markdown={currentMarkdown} enableHtml={enableHtml} />
+		</div>
+	);
+};
 
 export default App;
